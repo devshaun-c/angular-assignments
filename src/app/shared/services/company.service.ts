@@ -1,18 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { MatTableDataSource } from "@angular/material/table";
-import {
-	BehaviorSubject,
-	Observable,
-	catchError,
-	concatMap,
-	delay,
-	from,
-	interval,
-	map,
-	of,
-} from "rxjs";
+import { Observable, catchError, delay, map } from "rxjs";
 import { ICompany, ICompanyResponse } from "src/interface/interface";
+import { MatTableDataSource } from "@angular/material/table";
 
 @Injectable({
 	providedIn: "root",
@@ -22,23 +12,23 @@ export class CompanyService {
 
 	public loadData(
 		page: number = 1,
-		itemsPerPage: number = 5,
+		pageSize: number = 5,
 		isError: boolean = false
-	): Observable<ICompanyResponse> {
+	): Observable<any> {
 		return this.http
 			.get<ICompany[]>(`./assets/data/${isError ? "error" : "companies.json"}`)
 			.pipe(
 				delay(1000), // to simulate waiting for an actual backend response
 				map((items) => ({
 					metadata: {
-						itemsPerPage: itemsPerPage,
+						pageSize: pageSize,
 						page: page,
 						totalItems: items.length,
 					},
-					data: items.slice((page - 1) * itemsPerPage, page * itemsPerPage),
+					data: items.slice((page - 1) * pageSize, page * pageSize),
 				})),
 				catchError((error) => {
-					throw new Error("Data can't be received");
+					throw new Error("Failed to fetch data");
 				})
 			);
 	}

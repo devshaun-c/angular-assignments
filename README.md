@@ -9,8 +9,7 @@
 ## Additional requirements:
 
 -   Bonus: Showcase of use as much as possible RxJS operator to build the data stream.
--   Bonus: Showcase use of different kinds of filtering input like select, input, date picker, checkbox,
-    and radio.
+-   Bonus: Showcase use of different kinds of filtering input like select, input, date picker, checkbox, and radio.
 
 ## Technical Notes
 
@@ -39,8 +38,6 @@
     -   [x] GET - Listing
     -   [ ] Search
     -   [ ] Filter
--   [ ] Listing Page service GET integration
--   [ ] Listing Page service filter integration
 -   [ ] Listing page URL param filter persist
 -   [ ] Simulate error
 -   [ ] Simulate refresh

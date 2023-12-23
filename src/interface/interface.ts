@@ -14,7 +14,7 @@ export interface IProduct {
 }
 
 export interface IPaginationMetadata {
-	itemsPerPage: number;
+	pageSize: number;
 	page: number;
 	totalItems: number;
 }

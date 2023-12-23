@@ -56,10 +56,12 @@
 	</section>
 
 	<!-- ## TABLE SECTION -->
-	<ng-container *ngIf="!isError; else errorMessage">
-		<ng-container *ngIf="!isLoading; else loading">
-			<section class="table-section">
-				<table mat-table [dataSource]="data">
+	<section class="table-section">
+		<ng-container *ngIf="!isError; else errorMessage"></ng-container>
+		<ng-container *ngIf="!isRefresh; else loadingMessage"></ng-container>
+		<ng-container *ngIf="listingData$ | async as listingData">
+			<div class="table-wrapper" *ngIf="!isRefresh && !isError">
+				<table mat-table [dataSource]="listingData.data">
 					<!-- ID Column -->
 					<ng-container matColumnDef="id">
 						<th mat-header-cell *matHeaderCellDef>ID</th>
@@ -77,13 +79,17 @@
 					<!-- Company name Column -->
 					<ng-container matColumnDef="companyName">
 						<th mat-header-cell *matHeaderCellDef>Company Name</th>
-						<td mat-cell *matCellDef="let element">{{ element.companyName }}</td>
+						<td mat-cell *matCellDef="let element">
+							{{ element.companyName }}
+						</td>
 					</ng-container>
 
 					<!-- Company Rep Name Column -->
 					<ng-container matColumnDef="companyRepName">
 						<th mat-header-cell *matHeaderCellDef>Company Rep Name</th>
-						<td mat-cell *matCellDef="let element">{{ element.companyRepName }}</td>
+						<td mat-cell *matCellDef="let element">
+							{{ element.companyRepName }}
+						</td>
 					</ng-container>
 
 					<!-- Products Column -->
@@ -114,15 +120,36 @@
 				</table>
 
 				<!-- Pagination -->
-				<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-				</mat-paginator></section></ng-container
-	></ng-container>
+				<mat-paginator
+					[disabled]="isLoading"
+					[pageSizeOptions]="[5, 10, 20, 50, 100]"
+					[length]="totalItems"
+					[pageSize]="listingData.metadata.pageSize"
+					[pageIndex]="listingData.metadata.page - 1"
+					(page)="handlePageEvent($event)"
+				>
+				</mat-paginator>
 
-	<ng-template #loading>Loading...</ng-template>
-	<ng-template #errorMessage>
-		<div class="error-message">
-			<mat-icon>error</mat-icon>
-			<span>Error receiving data</span>
-		</div>
-	</ng-template>
+				<div *ngIf="isLoading" class="table-wrapper__loading-overlay"></div>
+			</div>
+		</ng-container>
+	</section>
 </main>
+
+<!-- ## TEMPLATES -->
+
+<!-- Loading -->
+<ng-template #loadingMessage>
+	<div class="loading">
+		<mat-spinner diameter="16"></mat-spinner>
+		<span>Loading...</span>
+	</div>
+</ng-template>
+
+<!-- Error -->
+<ng-template #errorMessage>
+	<div class="error-message">
+		<mat-icon>error</mat-icon>
+		<span>Uh oh! We are unable to retrieve your data. Please refresh.</span>
+	</div>
+</ng-template>
