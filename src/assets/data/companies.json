@@ -1,0 +1,104 @@
+[
+	{
+		"id": 1,
+		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"companyName": "Airbnb",
+		"companyId": "airbnb",
+		"companyRepName": "John Smith",
+		"products": [
+			{ "id": "ha", "name": "Hiring Automation" },
+			{ "id": "pa", "name": "Psychometric Assessment" }
+		],
+		"status": "Active"
+	},
+	{
+		"id": 2,
+		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"companyName": "Google",
+		"companyId": "goog",
+		"companyRepName": "Alice Johnson",
+		"products": [{ "id": "gh", "name": "Graduate Hiring" }],
+		"status": "Pending"
+	},
+	{
+		"id": 3,
+		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"companyName": "Microsoft",
+		"companyId": "msft",
+		"companyRepName": "David Miller",
+		"products": [
+			{ "id": "pa", "name": "Psychometric Assessment" },
+			{ "id": "gh", "name": "Graduate Hiring" }
+		],
+		"status": "Cancelled"
+	},
+	{
+		"id": 4,
+		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"companyName": "Apple Inc.",
+		"companyId": "appl",
+		"companyRepName": "Emily Davis",
+		"products": [{ "id": "lh", "name": "Lateral Hiring" }],
+		"status": "Active"
+	},
+	{
+		"id": 5,
+		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"companyName": "Amazon",
+		"companyId": "amzn",
+		"companyRepName": "Michael Brown",
+		"products": [{ "id": "gh", "name": "Graduate Hiring" }],
+		"status": "Pending"
+	},
+	{
+		"id": 6,
+		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"companyName": "Tesla",
+		"companyId": "tsla",
+		"companyRepName": "Olivia White",
+		"products": [
+			{ "id": "lh", "name": "Lateral Hiring" },
+			{ "id": "gh", "name": "Graduate Hiring" }
+		],
+		"status": "Cancelled"
+	},
+	{
+		"id": 7,
+		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"companyName": "Facebook",
+		"companyId": "fb",
+		"companyRepName": "Robert Taylor",
+		"products": [{ "id": "pa", "name": "Psychometric Assessment" }],
+		"status": "Active"
+	},
+	{
+		"id": 8,
+		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"companyName": "Samsung",
+		"companyId": "sams",
+		"companyRepName": "Sophia Martinez",
+		"products": [{ "id": "ha", "name": "Hiring Automation" }],
+		"status": "Pending"
+	},
+	{
+		"id": 9,
+		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"companyName": "IBM",
+		"companyId": "ibm",
+		"companyRepName": "Daniel Wilson",
+		"products": [{ "id": "gh", "name": "Graduate Hiring" }],
+		"status": "Cancelled"
+	},
+	{
+		"id": 10,
+		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"companyName": "Netflix",
+		"companyId": "nflx",
+		"companyRepName": "Ava Johnson",
+		"products": [
+			{ "id": "pa", "name": "Psychometric Assessment" },
+			{ "id": "gh", "name": "Graduate Hiring" }
+		],
+		"status": "Active"
+	}
+]
