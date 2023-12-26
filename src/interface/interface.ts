@@ -28,4 +28,6 @@ export interface IFilter {
 	searchValue: string;
 	statusList: string[];
 	productList: string[];
+	startDate: Date | null;
+	endDate: Date | null;
 }

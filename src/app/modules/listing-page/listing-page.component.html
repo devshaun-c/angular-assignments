@@ -18,7 +18,7 @@
 
 	<!-- ## FILTER SECTION -->
 	<section class="toolbar-section toolbar-section--shaded">
-		<mat-form-field appearance="outline" style="width: 300px">
+		<mat-form-field appearance="outline" style="width: 200px">
 			<mat-label>Search</mat-label>
 			<input
 				matInput
@@ -47,14 +47,18 @@
 				[(ngModel)]="filterProperties.productList"
 				(ngModelChange)="handleFilterChange($event, 'products')"
 			>
-				<mat-option *ngFor="let product of productList" [value]="product.id">
+				<mat-option
+					*ngFor="let product of productList"
+					[value]="product.id"
+					[disabled]="isError || isLoading"
+				>
 					{{ product.name }}
 				</mat-option>
 			</mat-select>
 		</mat-form-field>
 
 		<!-- Status filter -->
-		<mat-form-field appearance="outline">
+		<mat-form-field appearance="outline" style="width: 200px">
 			<mat-label>Status</mat-label>
 			<mat-select
 				multiple
@@ -62,20 +66,46 @@
 				[(ngModel)]="filterProperties.statusList"
 				(ngModelChange)="handleFilterChange($event, 'status')"
 			>
-				<mat-option *ngFor="let status of statusList" [value]="status">
+				<mat-option
+					*ngFor="let status of statusList"
+					[value]="status"
+					[disabled]="isError || isLoading"
+				>
 					{{ status }}
 				</mat-option>
 			</mat-select>
 		</mat-form-field>
 
-		<!-- Clear filters button -->
+		<mat-form-field appearance="outline">
+			<mat-label>Date joined</mat-label>
+			<mat-date-range-input [rangePicker]="picker" [disabled]="isError || isLoading">
+				<input
+					matStartDate
+					placeholder="Start date"
+					[(ngModel)]="filterProperties.startDate"
+					(dateChange)="handleDateFilterChange('start', $event)"
+				/>
+				<input
+					matEndDate
+					placeholder="End date"
+					[(ngModel)]="filterProperties.endDate"
+					(dateChange)="handleDateFilterChange('end', $event)"
+				/>
+			</mat-date-range-input>
+			<mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+			<mat-date-range-picker #picker></mat-date-range-picker>
+		</mat-form-field>
+
+		<!-- Clear all filters button -->
 		<button
 			mat-button
 			[disabled]="isError || isLoading"
 			*ngIf="
 				filterProperties.productList.length ||
 				filterProperties.statusList.length ||
-				filterProperties.searchValue
+				filterProperties.searchValue ||
+				filterProperties.startDate ||
+				filterProperties.endDate
 			"
 			(click)="handleClearAllFilters()"
 		>
@@ -100,7 +130,7 @@
 					<ng-container matColumnDef="dateJoined">
 						<th mat-header-cell *matHeaderCellDef>Date Joined</th>
 						<td mat-cell *matCellDef="let element">
-							{{ element.dateJoined | date : "shortDate" }}
+							{{ element.dateJoined | date : "dd MMM YYYY" }}
 						</td>
 					</ng-container>
 
@@ -148,7 +178,7 @@
 				<mat-paginator
 					[disabled]="isLoading"
 					[pageSizeOptions]="[5, 10, 20, 50, 100]"
-					[length]="totalItems"
+					[length]="listingData.metadata.totalItems"
 					[pageSize]="listingData.metadata.pageSize"
 					[pageIndex]="listingData.metadata.page - 1"
 					(page)="handlePageEvent($event)"

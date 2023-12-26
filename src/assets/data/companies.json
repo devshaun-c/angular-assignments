@@ -1,7 +1,7 @@
 [
 	{
 		"id": 1,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2023-01-10T00:00:00.000Z",
 		"companyName": "Airbnb",
 		"companyId": "airbnb",
 		"companyRepName": "John Smith",
@@ -13,7 +13,7 @@
 	},
 	{
 		"id": 2,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2023-02-15T00:00:00.000Z",
 		"companyName": "Google",
 		"companyId": "goog",
 		"companyRepName": "Alice Johnson",
@@ -22,7 +22,7 @@
 	},
 	{
 		"id": 3,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2023-03-20T00:00:00.000Z",
 		"companyName": "Microsoft",
 		"companyId": "msft",
 		"companyRepName": "David Miller",
@@ -34,7 +34,7 @@
 	},
 	{
 		"id": 4,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2023-04-25T00:00:00.000Z",
 		"companyName": "Apple Inc.",
 		"companyId": "appl",
 		"companyRepName": "Emily Davis",
@@ -43,7 +43,7 @@
 	},
 	{
 		"id": 5,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2023-05-30T00:00:00.000Z",
 		"companyName": "Amazon",
 		"companyId": "amzn",
 		"companyRepName": "Michael Brown",
@@ -52,7 +52,7 @@
 	},
 	{
 		"id": 6,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2023-06-05T00:00:00.000Z",
 		"companyName": "Tesla",
 		"companyId": "tsla",
 		"companyRepName": "Olivia White",
@@ -64,7 +64,7 @@
 	},
 	{
 		"id": 7,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2023-07-10T00:00:00.000Z",
 		"companyName": "Facebook",
 		"companyId": "fb",
 		"companyRepName": "Robert Taylor",
@@ -73,7 +73,7 @@
 	},
 	{
 		"id": 8,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2023-08-15T00:00:00.000Z",
 		"companyName": "Samsung",
 		"companyId": "sams",
 		"companyRepName": "Sophia Martinez",
@@ -82,7 +82,7 @@
 	},
 	{
 		"id": 9,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2023-09-20T00:00:00.000Z",
 		"companyName": "IBM",
 		"companyId": "ibm",
 		"companyRepName": "Daniel Wilson",
@@ -91,7 +91,7 @@
 	},
 	{
 		"id": 10,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2023-10-25T00:00:00.000Z",
 		"companyName": "Netflix",
 		"companyId": "nflx",
 		"companyRepName": "Ava Johnson",
@@ -103,7 +103,7 @@
 	},
 	{
 		"id": 11,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2023-11-30T00:00:00.000Z",
 		"companyName": "Intel",
 		"companyId": "intel",
 		"companyRepName": "Benjamin Adams",
@@ -115,7 +115,7 @@
 	},
 	{
 		"id": 12,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2023-12-05T00:00:00.000Z",
 		"companyName": "Oracle",
 		"companyId": "oracle",
 		"companyRepName": "Ella Robinson",
@@ -127,7 +127,7 @@
 	},
 	{
 		"id": 13,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2024-01-10T00:00:00.000Z",
 		"companyName": "Twitter",
 		"companyId": "twitter",
 		"companyRepName": "Frank Davis",
@@ -139,7 +139,7 @@
 	},
 	{
 		"id": 14,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2024-02-15T00:00:00.000Z",
 		"companyName": "Uber",
 		"companyId": "uber",
 		"companyRepName": "Grace White",
@@ -148,7 +148,7 @@
 	},
 	{
 		"id": 15,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2024-03-20T00:00:00.000Z",
 		"companyName": "LinkedIn",
 		"companyId": "linkedin",
 		"companyRepName": "Henry Miller",
@@ -157,7 +157,7 @@
 	},
 	{
 		"id": 16,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2024-04-25T00:00:00.000Z",
 		"companyName": "HP Inc.",
 		"companyId": "hp",
 		"companyRepName": "Isabella Johnson",
@@ -169,7 +169,7 @@
 	},
 	{
 		"id": 17,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2024-05-30T00:00:00.000Z",
 		"companyName": "Cisco",
 		"companyId": "cisco",
 		"companyRepName": "Jack Wilson",
@@ -178,7 +178,7 @@
 	},
 	{
 		"id": 18,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2024-06-05T00:00:00.000Z",
 		"companyName": "Dell",
 		"companyId": "dell",
 		"companyRepName": "Katherine Brown",
@@ -190,7 +190,7 @@
 	},
 	{
 		"id": 19,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2024-07-10T00:00:00.000Z",
 		"companyName": "Sony",
 		"companyId": "sony",
 		"companyRepName": "Leo Martinez",
@@ -199,7 +199,7 @@
 	},
 	{
 		"id": 20,
-		"dateJoined": "2023-12-23T00:00:00.000Z",
+		"dateJoined": "2024-08-15T00:00:00.000Z",
 		"companyName": "Adobe",
 		"companyId": "adobe",
 		"companyRepName": "Mia Taylor",

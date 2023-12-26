@@ -8,6 +8,7 @@ import { MatInputModule } from "@angular/material/input";
 import { HeaderComponent } from "src/app/shared/components/header/header.component";
 import { PRODUCT_OPTIONS, STATUS_OPTIONS } from "src/constants/options";
 import { MatButtonModule } from "@angular/material/button";
+import { MatDatepickerInputEvent, MatDatepickerModule } from "@angular/material/datepicker";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { StatusTagComponent } from "src/app/shared/components/status-tag/status-tag.component";
 import { CompanyService } from "src/app/shared/services/company.service";
@@ -22,9 +23,17 @@ import {
 	takeUntil,
 	tap,
 } from "rxjs";
-import { ICompany, ICompanyResponse, IFilter, IProduct } from "src/interface/interface";
+import {
+	ICompany,
+	ICompanyResponse,
+	IFilter,
+	IPaginationMetadata,
+	IProduct,
+} from "src/interface/interface";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { FormsModule } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
+import { MatNativeDateModule } from "@angular/material/core";
 
 @Component({
 	selector: "app-listing-page",
@@ -39,6 +48,8 @@ import { FormsModule } from "@angular/forms";
 		MatIconModule,
 		MatPaginatorModule,
 		MatProgressSpinnerModule,
+		MatDatepickerModule,
+		MatNativeDateModule,
 		MatInputModule,
 		HeaderComponent,
 		CommonModule,
@@ -47,7 +58,6 @@ import { FormsModule } from "@angular/forms";
 	],
 })
 export class ListingPageComponent implements OnInit {
-	public totalItems: number = 0;
 	public isLoading: boolean = true;
 	public isRefresh: boolean = true;
 	public isError: boolean = false;
@@ -57,18 +67,24 @@ export class ListingPageComponent implements OnInit {
 		searchValue: "",
 		statusList: [],
 		productList: [],
+		startDate: null,
+		endDate: null,
+	};
+	public paginationProperties: IPaginationMetadata = {
+		page: 1,
+		pageSize: 5,
+		totalItems: 0,
 	};
 
 	public listingData$: Observable<any>;
-	private unsubscribe$ = new Subject<void>();
 	public filterQuery$ = new BehaviorSubject<IFilter>(this.filterProperties);
-
 	public pagination$ = new BehaviorSubject<{
 		page: number;
 		pageSize: number;
 		totalItems: number;
-	}>({ page: 1, pageSize: 5, totalItems: 0 });
+	}>(this.paginationProperties);
 
+	// TABLE COLUNS
 	displayedColumns: string[] = [
 		"id",
 		"dateJoined",
@@ -78,7 +94,13 @@ export class ListingPageComponent implements OnInit {
 		"status",
 	];
 
-	constructor(private companyService: CompanyService) {}
+	constructor(
+		private companyService: CompanyService,
+		private activatedRoute: ActivatedRoute,
+		private router: Router
+	) {
+		this.resumeFilterQueryParams();
+	}
 
 	ngOnInit(): void {
 		this.listingData$ = combineLatest([
@@ -90,11 +112,9 @@ export class ListingPageComponent implements OnInit {
 				this.companyService.loadData(pagination.page, pagination.pageSize, filterQuery)
 			),
 			tap((res) => {
-				this.totalItems = res.metadata.totalItems;
 				this.isLoading = false;
 				this.isRefresh = false;
 			}),
-			takeUntil(this.unsubscribe$),
 			catchError((error) => {
 				this.isError = true;
 				this.isLoading = false;
@@ -104,22 +124,31 @@ export class ListingPageComponent implements OnInit {
 	}
 
 	handleSearchChange(searchQuery: string) {
+		const { statusList, productList, startDate, endDate } = this.filterProperties;
 		this.filterProperties.searchValue = searchQuery;
 		this.filterQuery$.next({
 			searchValue: searchQuery,
-			statusList: this.filterProperties.statusList,
-			productList: this.filterProperties.productList,
+			statusList,
+			productList,
+			startDate,
+			endDate,
 		});
+
+		this.applyFilterToRoute();
 	}
 
 	handleFilterChange(options: string[], category: string) {
+		const { searchValue, statusList, productList, startDate, endDate } = this.filterProperties;
+
 		if (category === "products") {
 			this.filterProperties.productList = options;
 
 			this.filterQuery$.next({
-				searchValue: this.filterProperties.searchValue,
-				statusList: this.filterProperties.statusList,
+				searchValue,
+				statusList,
 				productList: options,
+				startDate,
+				endDate,
 			});
 		}
 
@@ -127,61 +156,155 @@ export class ListingPageComponent implements OnInit {
 			this.filterProperties.statusList = options;
 
 			this.filterQuery$.next({
-				searchValue: this.filterProperties.searchValue,
+				searchValue,
 				statusList: options,
-				productList: this.filterProperties.productList,
+				productList,
+				startDate,
+				endDate,
 			});
 		}
+
+		this.applyFilterToRoute();
+	}
+
+	handleDateFilterChange(type: string, event: MatDatepickerInputEvent<Date>) {
+		if (type === "start") this.filterProperties.startDate = event.value;
+		if (type === "end") this.filterProperties.endDate = event.value;
+
+		const { searchValue, statusList, productList, startDate, endDate } = this.filterProperties;
+
+		if (startDate && endDate) {
+			this.filterQuery$.next({
+				searchValue,
+				statusList,
+				productList,
+				startDate,
+				endDate,
+			});
+		}
+
+		this.applyFilterToRoute();
 	}
 
 	handleClearSearch() {
-		console.log("CLEAR SEARCH");
+		const { statusList, productList, startDate, endDate } = this.filterProperties;
 		this.isLoading = true;
 		this.filterProperties.searchValue = "";
-		this.resetFilterQuery();
+		this.filterQuery$.next({
+			searchValue: "",
+			productList,
+			statusList,
+			startDate,
+			endDate,
+		});
+
+		this.resetPagination();
+		this.router.navigate([]);
 	}
 
 	handleClearAllFilters() {
 		this.isLoading = true;
-		this.resetFilterQuery();
+		this.resetAllFilterQuery();
 	}
 
 	handleRefreshData() {
-		console.log("REFRESH DATA and FILTERS");
 		this.isError = false;
 		this.isRefresh = true;
 
-		this.resetFilterQuery();
+		this.resetAllFilterQuery();
 		this.resetPagination();
 	}
 
 	handleSimulateError() {
-		console.log("SIMULATE ERROR");
 		this.isError = true;
 	}
 
 	handlePageEvent(e: PageEvent) {
+		this.paginationProperties = {
+			page: e.pageIndex + 1,
+			pageSize: e.pageSize,
+			totalItems: this.paginationProperties.totalItems,
+		};
+
 		this.pagination$.next({
 			page: e.pageIndex + 1,
 			pageSize: e.pageSize,
-			totalItems: this.totalItems,
+			totalItems: this.paginationProperties.totalItems,
 		});
+
+		this.applyFilterToRoute();
 	}
 
-	private resetFilterQuery() {
-		this.filterProperties = { searchValue: "", statusList: [], productList: [] };
-		this.filterQuery$.next({
+	private resetAllFilterQuery() {
+		this.filterProperties = {
 			searchValue: "",
-			productList: [],
 			statusList: [],
-		});
+			productList: [],
+			startDate: null,
+			endDate: null,
+		};
+		this.filterQuery$.next(this.filterProperties);
+
+		this.resetPagination();
+		this.router.navigate([]);
 	}
 
 	private resetPagination() {
+		this.paginationProperties = {
+			page: 1,
+			pageSize: 5,
+			totalItems: 0,
+		};
+
 		this.pagination$.next({
 			page: 1,
 			pageSize: 5,
-			totalItems: this.totalItems,
+			totalItems: this.paginationProperties.totalItems,
 		});
+	}
+
+	private applyFilterToRoute(): void {
+		const { searchValue, productList, statusList, startDate, endDate } = this.filterProperties;
+		const { pageSize, page } = this.paginationProperties;
+
+		this.router.navigate([], {
+			relativeTo: this.activatedRoute,
+			queryParams: {
+				search: searchValue ? searchValue : null,
+				products: productList.length ? productList : [],
+				status: statusList.length ? statusList : [],
+				startDate: startDate,
+				endDate: endDate,
+				page: page,
+				pageSize: pageSize,
+			},
+			replaceUrl: true,
+		});
+	}
+
+	private resumeFilterQueryParams() {
+		let queryParams = this.activatedRoute.snapshot.queryParamMap;
+
+		if (queryParams.get("page")) {
+			this.paginationProperties.page = parseInt(queryParams.get("page") || "1");
+		}
+		if (queryParams.get("pageSize")) {
+			this.paginationProperties.pageSize = parseInt(queryParams.get("pageSize") || "5");
+		}
+		if (queryParams.get("search")) {
+			this.filterProperties.searchValue = queryParams.get("search") || "";
+		}
+		if (queryParams.getAll("status")) {
+			this.filterProperties.statusList = queryParams.getAll("status");
+		}
+		if (queryParams.getAll("products")) {
+			this.filterProperties.productList = queryParams.getAll("products");
+		}
+		if (queryParams.get("startDate")) {
+			this.filterProperties.startDate = new Date(queryParams.get("startDate") || null || 0);
+		}
+		if (queryParams.get("endDate")) {
+			this.filterProperties.endDate = new Date(queryParams.get("endDate") || null || 0);
+		}
 	}
 }

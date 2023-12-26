@@ -4,6 +4,7 @@ import { Observable, catchError, delay, map } from "rxjs";
 import { ICompany, ICompanyResponse, IFilter } from "src/interface/interface";
 import { MatTableDataSource } from "@angular/material/table";
 import { hasIntersection } from "../utils/utils";
+import { flush } from "@angular/core/testing";
 
 @Injectable({
 	providedIn: "root",
@@ -19,7 +20,7 @@ export class CompanyService {
 	// products: IProduct[];
 	// status: "Active" | "Pending" | "Cancelled";
 
-	public loadData(page: number = 1, pageSize: number = 5, filterQuery: IFilter): Observable<any> {
+	public loadData(page: number, pageSize: number, filterQuery: IFilter): Observable<any> {
 		return this.http.get<ICompany[]>("./assets/data/companies.json").pipe(
 			delay(1000), // to simulate waiting for an actual backend response
 			map((items) => {
@@ -29,49 +30,58 @@ export class CompanyService {
 					totalItems: items.length,
 				};
 				let filteredList = [...items];
+				const { searchValue, productList, statusList, startDate, endDate } = filterQuery;
+
+				// FILTER FOR DATE
+				if (startDate && endDate) {
+					filteredList = filteredList.filter((c) => {
+						return (
+							(!startDate || new Date(c.dateJoined) >= startDate) &&
+							(!endDate || new Date(c.dateJoined) <= endDate)
+						);
+					});
+				}
 
 				// FILTER FOR STATUS
-				if (filterQuery.statusList.length) {
+				if (statusList.length) {
 					filteredList = filteredList.filter((c) =>
-						hasIntersection([c.status], filterQuery.statusList)
+						hasIntersection([c.status], statusList)
 					);
-					metadata = {
-						...metadata,
-						totalItems: filteredList.length,
-					};
 				}
 
 				// FILTER FOR PRODUCT
-				if (filterQuery.productList.length) {
+				if (productList.length) {
 					filteredList = filteredList.filter((c) =>
 						hasIntersection(
 							c.products.map((p) => p.id),
-							filterQuery.productList
+							productList
 						)
 					);
-					metadata = {
-						...metadata,
-						totalItems: filteredList.length,
-					};
 				}
 
 				// FILTER FOR SEARCH
-				if (filterQuery.searchValue) {
-					const lowerCaseSearchQuery = filterQuery.searchValue.toLowerCase();
+				if (searchValue) {
+					const lowerCaseSearchQuery = searchValue.toLowerCase();
 					filteredList = filteredList.filter(
 						(c) =>
 							c.companyName.toLowerCase().includes(lowerCaseSearchQuery) ||
 							c.companyRepName.toLowerCase().includes(lowerCaseSearchQuery)
 					);
-					metadata = {
-						...metadata,
-						totalItems: filteredList.length,
-					};
 				}
 
+				// If current pagination is larger than the actual list, default the page to 1
+				const numberOfDisplayablePages = Math.ceil(filteredList.length / pageSize);
+				metadata.page = metadata.page > numberOfDisplayablePages ? 1 : page;
+
 				return {
-					metadata,
-					data: filteredList.slice((page - 1) * pageSize, page * pageSize),
+					metadata: {
+						...metadata,
+						totalItems: filteredList.length,
+					},
+					data: filteredList.slice(
+						(metadata.page - 1) * metadata.pageSize,
+						metadata.page * metadata.pageSize
+					),
 				};
 			}),
 			catchError((error) => {
