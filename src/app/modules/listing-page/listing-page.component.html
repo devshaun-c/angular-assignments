@@ -18,10 +18,17 @@
 
 	<!-- ## FILTER SECTION -->
 	<section class="toolbar-section toolbar-section--shaded">
-		<mat-form-field appearance="outline">
+		<mat-form-field appearance="outline" style="width: 300px">
 			<mat-label>Search</mat-label>
-			<input matInput type="text" [disabled]="isError || isLoading" />
+			<input
+				matInput
+				type="text"
+				[disabled]="isError || isLoading"
+				[(ngModel)]="filterProperties.searchValue"
+				(ngModelChange)="handleSearchChange($event)"
+			/>
 			<button
+				*ngIf="filterProperties.searchValue.length"
 				matSuffix
 				mat-icon-button
 				(click)="handleClearSearch()"
@@ -34,7 +41,12 @@
 		<!-- Product filter -->
 		<mat-form-field appearance="outline" style="width: 300px">
 			<mat-label>Products</mat-label>
-			<mat-select multiple [disabled]="isError || isLoading">
+			<mat-select
+				multiple
+				[disabled]="isError || isLoading"
+				[(ngModel)]="filterProperties.productList"
+				(ngModelChange)="handleFilterChange($event, 'products')"
+			>
 				<mat-option *ngFor="let product of productList" [value]="product.id">
 					{{ product.name }}
 				</mat-option>
@@ -44,7 +56,12 @@
 		<!-- Status filter -->
 		<mat-form-field appearance="outline">
 			<mat-label>Status</mat-label>
-			<mat-select multiple [disabled]="isError || isLoading">
+			<mat-select
+				multiple
+				[disabled]="isError || isLoading"
+				[(ngModel)]="filterProperties.statusList"
+				(ngModelChange)="handleFilterChange($event, 'status')"
+			>
 				<mat-option *ngFor="let status of statusList" [value]="status">
 					{{ status }}
 				</mat-option>
@@ -52,7 +69,18 @@
 		</mat-form-field>
 
 		<!-- Clear filters button -->
-		<button mat-button [disabled]="isError || isLoading">Clear all filters</button>
+		<button
+			mat-button
+			[disabled]="isError || isLoading"
+			*ngIf="
+				filterProperties.productList.length ||
+				filterProperties.statusList.length ||
+				filterProperties.searchValue
+			"
+			(click)="handleClearAllFilters()"
+		>
+			Clear all filters
+		</button>
 	</section>
 
 	<!-- ## TABLE SECTION -->
@@ -96,11 +124,8 @@
 					<ng-container matColumnDef="products">
 						<th mat-header-cell *matHeaderCellDef>Products</th>
 						<td mat-cell *matCellDef="let element" style="width: 300px">
-							<div class="product-info">
-								<div
-									class="product-info__tag"
-									*ngFor="let item of element.products"
-								>
+							<div class="product-col">
+								<div class="product-col__tag" *ngFor="let item of element.products">
 									{{ item.name }}
 								</div>
 							</div>
@@ -130,7 +155,7 @@
 				>
 				</mat-paginator>
 
-				<div *ngIf="isLoading" class="table-wrapper__loading-overlay"></div>
+				<ng-container [ngTemplateOutlet]="loadingOverlay"></ng-container>
 			</div>
 		</ng-container>
 	</section>
@@ -138,9 +163,9 @@
 
 <!-- ## TEMPLATES -->
 
-<!-- Loading -->
+<!-- Loading message -->
 <ng-template #loadingMessage>
-	<div class="loading">
+	<div class="loading-message">
 		<mat-spinner diameter="16"></mat-spinner>
 		<span>Loading...</span>
 	</div>
@@ -151,5 +176,12 @@
 	<div class="error-message">
 		<mat-icon>error</mat-icon>
 		<span>Uh oh! We are unable to retrieve your data. Please refresh.</span>
+	</div>
+</ng-template>
+
+<!-- Loading overlay -->
+<ng-template #loadingOverlay>
+	<div *ngIf="isLoading" class="loading-overlay">
+		<mat-spinner></mat-spinner>
 	</div>
 </ng-template>

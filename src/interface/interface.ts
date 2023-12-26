@@ -23,3 +23,9 @@ export interface ICompanyResponse {
 	metadata: IPaginationMetadata;
 	data: ICompany[];
 }
+
+export interface IFilter {
+	searchValue: string;
+	statusList: string[];
+	productList: string[];
+}

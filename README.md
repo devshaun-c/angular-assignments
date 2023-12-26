@@ -36,8 +36,9 @@
 -   [x] Listing Page UI
 -   [ ] Listing Service
     -   [x] GET - Listing
-    -   [ ] Search
-    -   [ ] Filter
+    -   [x] Search
+    -   [x] Filter products and status
+    -   [ ] Filter date range
 -   [ ] Listing page URL param filter persist
--   [ ] Simulate error
--   [ ] Simulate refresh
+-   [x] Simulate error
+-   [x] Simulate refresh
