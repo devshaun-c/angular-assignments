@@ -2,9 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, catchError, delay, map } from "rxjs";
 import { ICompany, ICompanyResponse, IFilter } from "src/interface/interface";
-import { MatTableDataSource } from "@angular/material/table";
 import { hasIntersection } from "../utils/utils";
-import { flush } from "@angular/core/testing";
 
 @Injectable({
 	providedIn: "root",
@@ -12,15 +10,11 @@ import { flush } from "@angular/core/testing";
 export class CompanyService {
 	constructor(private http: HttpClient) {}
 
-	// id: number;
-	// dateJoined: Date;
-	// companyName: string;
-	// companyId: string;
-	// companyRepName: string;
-	// products: IProduct[];
-	// status: "Active" | "Pending" | "Cancelled";
-
-	public loadData(page: number, pageSize: number, filterQuery: IFilter): Observable<any> {
+	public loadData(
+		page: number,
+		pageSize: number,
+		filterQuery: IFilter
+	): Observable<ICompanyResponse> {
 		return this.http.get<ICompany[]>("./assets/data/companies.json").pipe(
 			delay(1000), // to simulate waiting for an actual backend response
 			map((items) => {

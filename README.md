@@ -40,9 +40,7 @@
     -   [x] Filter products and status
     -   [x] Filter date range
 -   [x] Listing page URL param filter persist
--   [x] Listing page URL param pagination persistpagesize
+-   [x] Listing page URL param pagination persist
 -   [x] Simulate error
 -   [x] Simulate refresh
--   [ ] Consider cleaning params for Date filter
--   [ ] No data found message
--   [ ] Fix interface for MatDataTable
+-   [x] No data found message

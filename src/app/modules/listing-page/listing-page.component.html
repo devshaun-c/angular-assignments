@@ -118,94 +118,109 @@
 		<ng-container *ngIf="!isError; else errorMessage"></ng-container>
 		<ng-container *ngIf="!isRefresh; else loadingMessage"></ng-container>
 		<ng-container *ngIf="listingData$ | async as listingData">
-			<div class="table-wrapper" *ngIf="!isRefresh && !isError">
-				<table mat-table [dataSource]="listingData.data">
-					<!-- ID Column -->
-					<ng-container matColumnDef="id">
-						<th mat-header-cell *matHeaderCellDef>ID</th>
-						<td mat-cell *matCellDef="let element">{{ element.id }}</td>
-					</ng-container>
+			<ng-container *ngIf="listingData.data.length; else noDataMessage">
+				<div class="table-wrapper" *ngIf="!isRefresh && !isError">
+					<ng-container [ngTemplateOutlet]="loadingOverlay"></ng-container>
+					<table mat-table [dataSource]="listingData.data">
+						<!-- ID Column -->
+						<ng-container matColumnDef="id">
+							<th mat-header-cell *matHeaderCellDef>ID</th>
+							<td mat-cell *matCellDef="let element">{{ element.id }}</td>
+						</ng-container>
 
-					<!-- Date Joined Column -->
-					<ng-container matColumnDef="dateJoined">
-						<th mat-header-cell *matHeaderCellDef>Date Joined</th>
-						<td mat-cell *matCellDef="let element">
-							{{ element.dateJoined | date : "dd MMM YYYY" }}
-						</td>
-					</ng-container>
+						<!-- Date Joined Column -->
+						<ng-container matColumnDef="dateJoined">
+							<th mat-header-cell *matHeaderCellDef>Date Joined</th>
+							<td mat-cell *matCellDef="let element">
+								{{ element.dateJoined | date : "dd MMM YYYY" }}
+							</td>
+						</ng-container>
 
-					<!-- Company name Column -->
-					<ng-container matColumnDef="companyName">
-						<th mat-header-cell *matHeaderCellDef>Company Name</th>
-						<td mat-cell *matCellDef="let element">
-							{{ element.companyName }}
-						</td>
-					</ng-container>
+						<!-- Company name Column -->
+						<ng-container matColumnDef="companyName">
+							<th mat-header-cell *matHeaderCellDef>Company Name</th>
+							<td mat-cell *matCellDef="let element">
+								{{ element.companyName }}
+							</td>
+						</ng-container>
 
-					<!-- Company Rep Name Column -->
-					<ng-container matColumnDef="companyRepName">
-						<th mat-header-cell *matHeaderCellDef>Company Rep Name</th>
-						<td mat-cell *matCellDef="let element">
-							{{ element.companyRepName }}
-						</td>
-					</ng-container>
+						<!-- Company Rep Name Column -->
+						<ng-container matColumnDef="companyRepName">
+							<th mat-header-cell *matHeaderCellDef>Company Rep Name</th>
+							<td mat-cell *matCellDef="let element">
+								{{ element.companyRepName }}
+							</td>
+						</ng-container>
 
-					<!-- Products Column -->
-					<ng-container matColumnDef="products">
-						<th mat-header-cell *matHeaderCellDef>Products</th>
-						<td mat-cell *matCellDef="let element" style="width: 300px">
-							<div class="product-col">
-								<div class="product-col__tag" *ngFor="let item of element.products">
-									{{ item.name }}
+						<!-- Products Column -->
+						<ng-container matColumnDef="products">
+							<th mat-header-cell *matHeaderCellDef>Products</th>
+							<td mat-cell *matCellDef="let element" style="width: 300px">
+								<div class="product-col">
+									<div
+										class="product-col__tag"
+										*ngFor="let item of element.products"
+									>
+										{{ item.name }}
+									</div>
 								</div>
-							</div>
-						</td>
-					</ng-container>
+							</td>
+						</ng-container>
 
-					<!-- Status Column -->
-					<ng-container matColumnDef="status">
-						<th mat-header-cell *matHeaderCellDef>Status</th>
-						<td mat-cell *matCellDef="let element">
-							<app-status-tag [status]="element.status"></app-status-tag>
-						</td>
-					</ng-container>
+						<!-- Status Column -->
+						<ng-container matColumnDef="status">
+							<th mat-header-cell *matHeaderCellDef>Status</th>
+							<td mat-cell *matCellDef="let element">
+								<app-status-tag [status]="element.status"></app-status-tag>
+							</td>
+						</ng-container>
 
-					<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-					<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-				</table>
+						<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+						<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+					</table>
 
-				<!-- Pagination -->
-				<mat-paginator
-					[disabled]="isLoading"
-					[pageSizeOptions]="[5, 10, 20, 50, 100]"
-					[length]="listingData.metadata.totalItems"
-					[pageSize]="listingData.metadata.pageSize"
-					[pageIndex]="listingData.metadata.page - 1"
-					(page)="handlePageEvent($event)"
-				>
-				</mat-paginator>
-
-				<ng-container [ngTemplateOutlet]="loadingOverlay"></ng-container>
-			</div>
+					<mat-paginator
+						[disabled]="isLoading"
+						[pageSizeOptions]="[5, 10, 20, 50, 100]"
+						[length]="listingData.metadata.totalItems"
+						[pageSize]="listingData.metadata.pageSize"
+						[pageIndex]="listingData.metadata.page - 1"
+						(page)="handlePageEvent($event)"
+					>
+					</mat-paginator>
+				</div>
+			</ng-container>
 		</ng-container>
 	</section>
 </main>
 
 <!-- ## TEMPLATES -->
 
-<!-- Loading message -->
-<ng-template #loadingMessage>
-	<div class="loading-message">
-		<mat-spinner diameter="16"></mat-spinner>
-		<span>Loading...</span>
+<!-- No data message -->
+<ng-template #noDataMessage>
+	<div class="info-message" *ngIf="!isRefresh && !isLoading">
+		<mat-icon>warning</mat-icon>
+		<span>No data found</span>
 	</div>
+	<ng-container
+		*ngIf="isLoading && !isRefresh"
+		[ngTemplateOutlet]="loadingMessage"
+	></ng-container>
 </ng-template>
 
-<!-- Error -->
+<!-- Error message -->
 <ng-template #errorMessage>
 	<div class="error-message">
 		<mat-icon>error</mat-icon>
 		<span>Uh oh! We are unable to retrieve your data. Please refresh.</span>
+	</div>
+</ng-template>
+
+<!-- Loading message -->
+<ng-template #loadingMessage>
+	<div class="info-message">
+		<mat-spinner diameter="16"></mat-spinner>
+		<span>Loading...</span>
 	</div>
 </ng-template>
 

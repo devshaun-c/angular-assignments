@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import { Component, LOCALE_ID, OnInit } from "@angular/core";
 import { MatPaginatorModule, PageEvent } from "@angular/material/paginator";
-import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { MatTableModule } from "@angular/material/table";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSelectModule } from "@angular/material/select";
 import { MatInputModule } from "@angular/material/input";
@@ -15,21 +15,13 @@ import { CompanyService } from "src/app/shared/services/company.service";
 import {
 	BehaviorSubject,
 	Observable,
-	Subject,
 	catchError,
 	combineLatest,
 	debounceTime,
 	switchMap,
-	takeUntil,
 	tap,
 } from "rxjs";
-import {
-	ICompany,
-	ICompanyResponse,
-	IFilter,
-	IPaginationMetadata,
-	IProduct,
-} from "src/interface/interface";
+import { ICompanyResponse, IFilter, IPaginationMetadata, IProduct } from "src/interface/interface";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -76,7 +68,7 @@ export class ListingPageComponent implements OnInit {
 		totalItems: 0,
 	};
 
-	public listingData$: Observable<any>;
+	public listingData$: Observable<ICompanyResponse>;
 	public filterQuery$ = new BehaviorSubject<IFilter>(this.filterProperties);
 	public pagination$ = new BehaviorSubject<{
 		page: number;
@@ -168,8 +160,8 @@ export class ListingPageComponent implements OnInit {
 	}
 
 	handleDateFilterChange(type: string, event: MatDatepickerInputEvent<Date>) {
-		if (type === "start") this.filterProperties.startDate = event.value;
-		if (type === "end") this.filterProperties.endDate = event.value;
+		if (type === "start") this.filterProperties.startDate = event.value || null;
+		if (type === "end") this.filterProperties.endDate = event.value || null;
 
 		const { searchValue, statusList, productList, startDate, endDate } = this.filterProperties;
 
@@ -273,10 +265,10 @@ export class ListingPageComponent implements OnInit {
 				search: searchValue ? searchValue : null,
 				products: productList.length ? productList : [],
 				status: statusList.length ? statusList : [],
-				startDate: startDate,
-				endDate: endDate,
-				page: page,
-				pageSize: pageSize,
+				startDate,
+				endDate,
+				page,
+				pageSize,
 			},
 			replaceUrl: true,
 		});
