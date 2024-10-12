@@ -1,0 +1,31 @@
+<div class="summary">
+	<div class="summary-row">
+		<span class="summary-title">Company name</span>
+		<span>{{ data.companyName }}</span>
+	</div>
+
+	<div class="summary-row">
+		<span class="summary-title">Company address</span>
+		<span>{{ data.companyAddress }}</span>
+	</div>
+
+	<div class="summary-row">
+		<span class="summary-title">Company Representative Name</span>
+		<span>{{ data.companyRepName }}</span>
+	</div>
+
+	<div class="summary-row">
+		<span class="summary-title">Email</span>
+		<span>{{ data.email }}</span>
+	</div>
+
+	<div class="summary-row">
+		<span class="summary-title">Company description</span>
+		<span>{{ data.description }}</span>
+	</div>
+
+	<div class="summary-row">
+		<span class="summary-title">Products</span>
+		<span>{{ mapProductIdsToNames(data.products) }}</span>
+	</div>
+</div>

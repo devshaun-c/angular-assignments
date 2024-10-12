@@ -1,3 +1,23 @@
+# Assignment 2
+
+## Date Submitted: 13/10/2024
+
+3-Step Form Wizard
+[x] Display a simple header to show the current step progress
+[x] Dynamic step content for each step ( Note: Required each step is different component )
+[x] Able to go next or go back
+[x] Final submission form data should log in the console dev-tool.
+[x] Each step form field should have validation ( Note: Required use reactive form to do
+validation ) .
+[x] Before going to the next step, current step content must be valid, when invalid, please
+show inline error message.
+[ ] Bonus: Support asynchronous behavior where every time the user clicks next, it allows for an
+asynchronous check to be performed with the server before the user can proceed to the next
+page ( Note: When an asynchronous task is in progress, the next button should be disabled ) .
+[ ] Bonus: Showcase example of using angular form asynchronous validator
+
+---
+
 # Assignment 3
 
 ## Primary Requirements

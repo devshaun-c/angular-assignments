@@ -1,0 +1,16 @@
+.summary {
+	display: flex;
+	flex-direction: column;
+
+	.summary-row {
+		display: flex;
+		flex-direction: column;
+		margin-bottom: 1rem;
+	}
+
+	.summary-title {
+		color: gray;
+		font-size: 12px;
+		margin-bottom: 4px;
+	}
+}

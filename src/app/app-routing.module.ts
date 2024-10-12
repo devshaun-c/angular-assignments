@@ -4,6 +4,7 @@ import { ListingPageComponent } from "./modules/listing-page/listing-page.compon
 import { DefaultLayoutComponent } from "./shared/layout/default-layout/default-layout.component";
 import { AppComponent } from "./app.component";
 import { HomeComponent } from "./modules/home/home.component";
+import { CreatePageComponent } from "./modules/create-page/create-page.component";
 
 const routes: Routes = [
 	{
@@ -15,6 +16,11 @@ const routes: Routes = [
 		path: "listing",
 		component: DefaultLayoutComponent,
 		children: [{ path: "", component: ListingPageComponent }],
+	},
+	{
+		path: "create",
+		component: DefaultLayoutComponent,
+		children: [{ path: "", component: CreatePageComponent }],
 	},
 ];
 

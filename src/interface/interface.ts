@@ -2,8 +2,11 @@ export interface ICompany {
 	id: number;
 	dateJoined: Date;
 	companyName: string;
+	companyAddress: string;
 	companyId: string;
 	companyRepName: string;
+	email: string;
+	description: string;
 	products: IProduct[];
 	status: "Active" | "Pending" | "Cancelled";
 }

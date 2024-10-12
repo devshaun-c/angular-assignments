@@ -1,0 +1,68 @@
+<form [formGroup]="formGroup">
+	<mat-form-field appearance="outline">
+		<mat-label>Company Name</mat-label>
+		<input
+			matInput
+			placeholder="ABC Corporation"
+			formControlName="companyName"
+			required
+		/>
+		<mat-error
+			*ngIf="
+				formGroup.get('companyName')?.invalid &&
+				formGroup.get('companyName')?.touched
+			"
+			>Company name is required</mat-error
+		>
+	</mat-form-field>
+
+	<mat-form-field appearance="outline">
+		<mat-label>Address</mat-label>
+		<input
+			matInput
+			placeholder="Company address"
+			formControlName="companyAddress"
+			required
+		/>
+		<mat-error
+			*ngIf="
+				formGroup.get('companyAddress')?.invalid &&
+				formGroup.get('companyAddress')?.touched
+			"
+			>Company address is required</mat-error
+		>
+	</mat-form-field>
+
+	<mat-form-field appearance="outline">
+		<mat-label>Company Representative Name</mat-label>
+		<input
+			matInput
+			placeholder="John Smith"
+			formControlName="companyRepName"
+			required
+		/>
+		<mat-error
+			*ngIf="
+				formGroup.get('companyRepName')?.invalid &&
+				formGroup.get('companyRepName')?.touched
+			"
+			>Company Representative Name is required</mat-error
+		>
+	</mat-form-field>
+	<mat-form-field appearance="outline">
+		<mat-label>Contact email</mat-label>
+		<input
+			matInput
+			placeholder="john@example.com"
+			formControlName="email"
+			required
+		/>
+		<mat-error
+			*ngIf="
+				formGroup.get('email')?.invalid &&
+				formGroup.get('email')?.touched
+			"
+			>A valid Email is required</mat-error
+		>
+	</mat-form-field>
+</form>

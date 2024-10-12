@@ -1,0 +1,42 @@
+<div class="stepper-wrapper">
+	<div>
+		<div class="stepper">
+			<div class="step" *ngFor="let step of steps; let i = index">
+				<div
+					class="step-number"
+					[class.completed]="currentStep > i"
+					[class.active]="currentStep === i"
+				>
+					<span *ngIf="currentStep <= i">{{ i + 1 }}</span>
+					<mat-icon *ngIf="currentStep > i">check</mat-icon>
+				</div>
+				<div class="step-label">
+					{{ step.label }}
+				</div>
+			</div>
+			<div class="step-line"></div>
+		</div>
+
+		<ng-content></ng-content>
+	</div>
+
+	<div class="actions" *ngIf="!isCompleted">
+		<button
+			mat-button
+			type="button"
+			(click)="prevStep()"
+			[disabled]="currentStep === 0"
+		>
+			Back
+		</button>
+		<button
+			mat-button
+			class="action-button"
+			type="button"
+			(click)="validateAndNextStep()"
+			[disabled]="!isCurrentFormValid"
+		>
+			{{ currentStep === steps.length - 1 ? "Submit" : "Next" }}
+		</button>
+	</div>
+</div>

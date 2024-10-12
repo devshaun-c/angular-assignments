@@ -1,0 +1,28 @@
+<app-header [title]="'Create Page'"></app-header>
+
+<section class="wrapper">
+	<app-stepper
+		*ngIf="!isSuccess"
+		[steps]="steps"
+		[formsValidity]="formsValidity"
+		(stepChanged)="onStepChanged($event)"
+		(formSubmitAttempt)="validateCurrentForm($event)"
+	>
+		<div [ngSwitch]="currentStep">
+			<app-step-1-form
+				*ngSwitchCase="0"
+				[formGroup]="firstFormGroup"
+			></app-step-1-form>
+			<app-step-2-form
+				*ngSwitchCase="1"
+				[formGroup]="secondFormGroup"
+			></app-step-2-form>
+			<app-step-3-form
+				*ngSwitchCase="2"
+				[data]="allData"
+			></app-step-3-form>
+		</div>
+	</app-stepper>
+
+	<app-submit-success *ngIf="isSuccess"></app-submit-success>
+</section>

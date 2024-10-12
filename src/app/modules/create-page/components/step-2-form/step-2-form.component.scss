@@ -1,0 +1,8 @@
+form {
+	display: flex;
+	flex-direction: column;
+
+	.mat-mdc-form-field:has(mat-error) {
+		margin-bottom: 1rem !important;
+	}
+}
