@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, catchError, delay, map } from "rxjs";
+import { Observable, catchError, delay, map, of } from "rxjs";
 import { ICompany, ICompanyResponse, IFilter } from "src/interface/interface";
 import { hasIntersection } from "../utils/utils";
 
@@ -24,13 +24,20 @@ export class CompanyService {
 					totalItems: items.length,
 				};
 				let filteredList = [...items];
-				const { searchValue, productList, statusList, startDate, endDate } = filterQuery;
+				const {
+					searchValue,
+					productList,
+					statusList,
+					startDate,
+					endDate,
+				} = filterQuery;
 
 				// FILTER FOR DATE
 				if (startDate && endDate) {
 					filteredList = filteredList.filter((c) => {
 						return (
-							(!startDate || new Date(c.dateJoined) >= startDate) &&
+							(!startDate ||
+								new Date(c.dateJoined) >= startDate) &&
 							(!endDate || new Date(c.dateJoined) <= endDate)
 						);
 					});
@@ -58,14 +65,21 @@ export class CompanyService {
 					const lowerCaseSearchQuery = searchValue.toLowerCase();
 					filteredList = filteredList.filter(
 						(c) =>
-							c.companyName.toLowerCase().includes(lowerCaseSearchQuery) ||
-							c.companyRepName.toLowerCase().includes(lowerCaseSearchQuery)
+							c.companyName
+								.toLowerCase()
+								.includes(lowerCaseSearchQuery) ||
+							c.companyRepName
+								.toLowerCase()
+								.includes(lowerCaseSearchQuery)
 					);
 				}
 
 				// If current pagination is larger than the actual list, default the page to 1
-				const numberOfDisplayablePages = Math.ceil(filteredList.length / pageSize);
-				metadata.page = metadata.page > numberOfDisplayablePages ? 1 : page;
+				const numberOfDisplayablePages = Math.ceil(
+					filteredList.length / pageSize
+				);
+				metadata.page =
+					metadata.page > numberOfDisplayablePages ? 1 : page;
 
 				return {
 					metadata: {
@@ -82,5 +96,10 @@ export class CompanyService {
 				throw new Error("Failed to fetch data");
 			})
 		);
+	}
+
+	public validateData(): Observable<boolean> {
+		const isValid = true;
+		return of(isValid).pipe(delay(2000));
 	}
 }

@@ -6,3 +6,15 @@
 	max-width: 500px;
 	min-height: 400px;
 }
+
+.action-button {
+	margin-left: 0.5rem;
+	display: flex;
+	background-color: black;
+	color: white !important;
+}
+
+.actions {
+	display: flex;
+	margin-top: 1rem;
+}

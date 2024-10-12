@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import {
 	FormControl,
 	FormGroup,
@@ -8,14 +8,16 @@ import {
 } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatStepperModule } from "@angular/material/stepper";
-import { Subject } from "rxjs";
+import { catchError, finalize, Observable, of, Subject } from "rxjs";
 import { HeaderComponent } from "src/app/shared/components/header/header.component";
 import { StepperComponent } from "src/app/shared/components/stepper/stepper.component";
+import { CompanyService } from "src/app/shared/services/company.service";
+import { ICompany } from "src/interface/interface";
 import { Step1FormComponent } from "./components/step-1-form/step-1-form.component";
 import { Step2FormComponent } from "./components/step-2-form/step-2-form.component";
 import { Step3FormComponent } from "./components/step-3-form/step-3-form.component";
-import { ICompany } from "src/interface/interface";
 import { SubmitSuccessComponent } from "./components/submit-success/submit-success.component";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @Component({
 	selector: "app-create-page",
@@ -31,6 +33,7 @@ import { SubmitSuccessComponent } from "./components/submit-success/submit-succe
 		Step2FormComponent,
 		Step3FormComponent,
 		SubmitSuccessComponent,
+		MatProgressSpinnerModule,
 	],
 	templateUrl: "./create-page.component.html",
 	styleUrls: ["./create-page.component.scss"],
@@ -44,13 +47,12 @@ export class CreatePageComponent implements OnInit, OnDestroy {
 	allData: ICompany;
 	firstFormGroup: FormGroup;
 	secondFormGroup: FormGroup;
-	formsValidity: boolean[] = [];
 	currentStep: number = 0;
 	isLoading: boolean = false;
 	isSuccess: boolean = false;
 	_onDestroy = new Subject<void>();
 
-	constructor() {}
+	constructor(public companyService: CompanyService) {}
 
 	ngOnInit(): void {
 		this.firstFormGroup = new FormGroup({
@@ -66,24 +68,9 @@ export class CreatePageComponent implements OnInit, OnDestroy {
 			description: new FormControl(null, [Validators.required]),
 			products: new FormControl(null, [Validators.required]),
 		});
-		this.updateFormsValidity();
 	}
 
-	// Update the validity of all forms
-	updateFormsValidity() {
-		this.formsValidity = [
-			this.firstFormGroup.valid,
-			this.secondFormGroup.valid,
-			true,
-		];
-		console.log(this.formsValidity);
-	}
-
-	onStepChanged(stepIndex: number) {
-		this.currentStep = stepIndex;
-	}
-
-	validateCurrentForm(isLastStep: boolean) {
+	nextStep() {
 		const allFormData = {
 			...this.firstFormGroup.value,
 			...this.secondFormGroup.value,
@@ -91,25 +78,68 @@ export class CreatePageComponent implements OnInit, OnDestroy {
 		this.allData = allFormData;
 		this.isLoading = true;
 
+		this.isCurrentFormValid().subscribe({
+			next: (isValid) => {
+				this.isLoading = false;
+
+				if (isValid && this.currentStep < this.steps.length - 1) {
+					this.currentStep++;
+				} else if (this.isLastStep) {
+					this.submitForm();
+				}
+			},
+			error: (err) => {
+				this.isLoading = false;
+				console.log(err.message);
+			},
+		});
+	}
+
+	prevStep() {
+		if (this.currentStep > 0) {
+			this.currentStep--;
+		}
+	}
+
+	isCurrentFormValid(): Observable<boolean> {
 		const currentForm = this.getCurrentForm();
-		if (currentForm) {
-			Object.keys(currentForm.controls).forEach((field) => {
-				const control = currentForm.get(field);
-				control?.markAsTouched({ onlySelf: true });
-				control?.updateValueAndValidity();
-			});
-		}
-		this.updateFormsValidity();
-
-		if (currentForm?.valid) {
-			//Async form validation to be performed here.
+		if (!currentForm) {
+			return of(false);
 		}
 
-		if (isLastStep) {
-			console.log("Form Data:", allFormData);
-			//Async form submission to be performed here.
-			this.isSuccess = true;
+		//Manually trigger form validation - Needed cause forms are in own components
+		Object.keys(currentForm.controls).forEach((field) => {
+			const control = currentForm.get(field);
+			control?.markAsTouched({ onlySelf: true });
+			control?.updateValueAndValidity();
+		});
+
+		// Perform form input validation first
+		if (!currentForm.valid) {
+			return of(false);
 		}
+
+		// Perform async server validation
+		return this.checkIsValidData().pipe(
+			catchError((err) => {
+				console.log(err.message);
+				return of(false);
+			})
+		);
+	}
+
+	checkIsValidData(): Observable<boolean> {
+		this.isLoading = true;
+		return this.companyService.validateData().pipe(
+			finalize(() => {
+				this.isLoading = false;
+			})
+		);
+	}
+
+	submitForm() {
+		console.log("Form Data:", this.allData);
+		this.isSuccess = true;
 	}
 
 	// Get the current form based on the step
@@ -122,26 +152,12 @@ export class CreatePageComponent implements OnInit, OnDestroy {
 		return null;
 	}
 
-	onSubmit() {
-		this.isLoading = true;
-		const allFormData = {
-			step1: this.firstFormGroup.value,
-			step2: this.secondFormGroup.value,
-		};
-
-		console.log("All Form Data:", allFormData);
-
-		// You can also use JSON.stringify to format it nicely in the console
-		console.log(
-			"All Form Data (formatted):",
-			JSON.stringify(allFormData, null, 2)
-		);
-
-		// Proceed with submission logic
-	}
-
 	ngOnDestroy(): void {
 		this._onDestroy.next();
 		this._onDestroy.complete();
+	}
+
+	get isLastStep(): boolean {
+		return this.currentStep === this.steps.length - 1;
 	}
 }

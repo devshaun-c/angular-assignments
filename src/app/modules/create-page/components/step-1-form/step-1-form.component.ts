@@ -18,4 +18,5 @@ import { MatInputModule } from "@angular/material/input";
 })
 export class Step1FormComponent {
 	@Input() formGroup!: FormGroup;
+	@Input() isLoading: boolean = false;
 }

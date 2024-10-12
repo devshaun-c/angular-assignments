@@ -11,7 +11,7 @@
 validation ) .
 [x] Before going to the next step, current step content must be valid, when invalid, please
 show inline error message.
-[ ] Bonus: Support asynchronous behavior where every time the user clicks next, it allows for an
+[x] Bonus: Support asynchronous behavior where every time the user clicks next, it allows for an
 asynchronous check to be performed with the server before the user can proceed to the next
 page ( Note: When an asynchronous task is in progress, the next button should be disabled ) .
 [ ] Bonus: Showcase example of using angular form asynchronous validator
@@ -50,7 +50,7 @@ page ( Note: When an asynchronous task is in progress, the next button should be
 -   [x] Intertfaces
 -   [x] Routing
 -   [x] Listing Page UI
--   [ ] Listing Service
+-   [x] Listing Service
     -   [x] GET - Listing
     -   [x] Search
     -   [x] Filter products and status

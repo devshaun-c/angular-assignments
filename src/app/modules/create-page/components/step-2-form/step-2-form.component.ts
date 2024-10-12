@@ -22,5 +22,6 @@ import { PRODUCT_OPTIONS } from "src/constants/options";
 })
 export class Step2FormComponent {
 	@Input() formGroup!: FormGroup;
+	@Input() isLoading: boolean = false;
 	productList: IProduct[] = PRODUCT_OPTIONS;
 }
